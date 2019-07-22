@@ -102,3 +102,155 @@ class Product
 	
 	
 }
+
+
+
+service
+
+package com.cg.productmgmt.service;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import com.cg.productmgmt.dao.ProductDAO;
+import com.cg.productmgmt.exception.ProductException;
+
+public class ProductService implements IProductService
+{
+	ProductDAO d;
+	
+	public ProductService()
+	{
+		d = new ProductDAO();
+	}
+
+	@Override
+	public int updateProducts(String Category, int hike) throws ProductException {
+		// TODO Auto-generated method stub
+		d.updateProducts(Category, hike);
+		return 0;
+	}
+
+	@Override
+	public Map<String, Integer> getProductDetails() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public boolean isCategoryValid(String category) {
+		// TODO Auto-generated method stub
+		
+		return false;
+	}
+
+	public boolean ishHikeValid(int hike) {
+		// TODO Auto-generated method stub
+		boolean b =false;
+		if(hike>0)
+		{
+			b = true;
+			return b;
+		}
+		return false;
+	}
+	
+
+}
+
+
+dao
+
+
+package com.cg.productmgmt.dao;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import com.cg.productmgmt.exception.ProductException;
+
+
+public class ProductDAO implements IProductDAO
+{
+ 
+	
+	//map for ProductName as key and Category as value
+	
+		private static Map<String,String> productDetails;	
+		
+		public void productDetails()
+		{
+        productDetails.put("lux","soap");
+
+       productDetails.put("colgate","paste");
+
+      productDetails.put("pears","soap");
+
+      productDetails.put("sony","electronics");
+
+     productDetails.put("samsung","electronics");
+
+    productDetails.put("facepack", "cosmatics");
+
+    productDetails.put("facecream", "cosmatics");
+		}
+
+
+    
+		
+		//map for Product name as key  and price as value value
+		
+		private static Map<String,Integer> salesDetails;	
+		
+		public void salesDetails()
+		{
+		
+		salesDetails= new HashMap<>();
+
+	    salesDetails.put("lux", 100);
+
+	    salesDetails.put("colgate", 50);
+
+	    salesDetails.put("pears", 70);
+
+	    salesDetails.put("sony", 10000);
+
+	    salesDetails.put("samsung", 23000);
+
+	    salesDetails.put("facepack", 100);
+
+	    salesDetails.put("facecream", 60); 
+		}
+
+		
+		//Getter and Setter
+		
+		public static Map<String, Integer> getSalesDetails() {
+			return salesDetails;
+		}
+
+		public static void setSalesDetails(Map<String, Integer> salesDetails) {
+			ProductDAO.salesDetails = salesDetails;
+		}
+
+		public static void setProductDetails(Map<String, String> productDetails) {
+			ProductDAO.productDetails = productDetails;
+		}
+
+		HashMap<String,Integer> hm = new HashMap<String,Integer>();
+		@Override
+		public int updateProducts(String Category, int hike) throws ProductException 
+		{
+			hm.put(salesDetails,productDetails);
+			return 0;
+		}
+
+		@Override
+		public Map<String, Integer> getProductDetails() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+		
+		//implement methods in the interface
+}
+
+
