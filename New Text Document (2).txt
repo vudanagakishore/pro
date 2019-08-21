@@ -1,256 +1,134 @@
-package com.cg.productmgmt.ui;
+package com.cg.springbootrest.ImportedOrder.controller;
 
-import java.util.Map;
-import java.util.Scanner;
+import java.util.List;
 
-import com.cg.productmgmt.exception.ProductException;
-import com.cg.productmgmt.service.IProductService;
-import com.cg.productmgmt.service.ProductService;
+import javax.validation.Valid;
 
-public class Client 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.cg.springbootrest.ImportedOrder.bean.Order;
+import com.cg.springbootrest.ImportedOrder.exception.OrderException;
+import com.cg.springbootrest.ImportedOrder.service.OrderService;
+
+@RestController
+public class OrderController 
 {
-    /**
-        Refer the sample input and output for the presentation layer messages
-        Do not use tab or extra newline, which will lead to presentation error.
-        Do not provide any additional messages, which is not asked for
-    */
-    public static void main(String [] args){
-        Scanner sc=new Scanner(System.in);
-        while(true)
-        {
-        	System.out.println("1)   Update Product Price");
-        	System.out.println("2)   Exit");
-        	
-        	//This is for Entering input By the User
-        	
-        	int choice  = sc.nextInt();
-        	
-        	switch(choice)
-        	{
-        	case 1:
-        		System.out.println("1");
-        		break;
-        	case 2:
-        		System.out.println("2");
-        		break;
-        	default :
-        		System.out.println("3");
-        		break;
-        	
-        	
-        	}
-        }
-    }
-}
+	  @Autowired
+	  OrderService orderService;
+	  
+	
+	  
+	  @RequestMapping("/products")
+	    public List<Order> viewAllOrder() throws OrderException
+	  	{
 
-class ProductDetails
-{
-	Scanner sc = new Scanner(System.in);
-	Product p;
-	ProductService s;
+
+	        return orderService.viewAllOrder();
+	    }
+	  
 	
-	public ProductDetails()
-	{
-		p = new Product();
-		s = new ProductService();
-		
-	}
+	    @RequestMapping(value="/product",method=RequestMethod.POST)  
+	    // @PutMapping can also be used but we don't have to write method=RequestMethod.POST
+	    public List<Order> createOrder(@RequestBody Order order) throws OrderException
+	    {
+	        return orderService.createOrder(order);
+	    }
+	    
 	
-	public void updateDetails()
-	{
-		
-		System.out.println("Enter the Product Category :");
-		String Category = sc.nextLine();
-		System.out.println("Enter hike Rate :");
-		int hike = sc.nextInt();
-		try {
-			s.updateProducts(Category, hike);
-		} catch (ProductException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-	}
+	    @RequestMapping("/getByprice/{price}/{price1}")
+	    List<Order> ViewOrderBasedOnQuantityRange(@PathVariable int quantity,@PathVariable int quantity1) throws OrderException{
+	        return orderService.findByQuantity(quantity,quantity1);
+	    }
+	    
+	    
+	
+	    @RequestMapping("/repos")
+	    public List<Order> viewAllOrdersBasedAmountGreaterThanUserEntered() throws OrderException{
+	        return orderService.getAllOrderByQty();
+	    }
+	    
+	    @PutMapping("/products/{id}")
+	    public List<Order> updateOrder(@PathVariable long id,@RequestBody Order order) throws OrderException{
+	        return orderService.updateOrder(id,order);
+	    }
+	    
+
+	  
+	  
 }
 
 
-class Product
-{
-	String productCategory;
-	int hikeRate;
-	public Product(String productCategory, int hikeRate) {
-		super();
-		this.productCategory = productCategory;
-		this.hikeRate = hikeRate;
-	}
-	public Product() {
-		// TODO Auto-generated constructor stub
-	}
-	public String getProductCategory() {
-		return productCategory;
-	}
-	public void setProductCategory(String productCategory) {
-		this.productCategory = productCategory;
-	}
-	public int getHikeRate() {
-		return hikeRate;
-	}
-	public void setHikeRate(int hikeRate) {
-		this.hikeRate = hikeRate;
-	}
 
-	
+service interface
+.
+
+package com.cg.springbootrest.ImportedOrder.service;
+
+import java.util.List;
+
+
+import com.cg.springbootrest.ImportedOrder.bean.Order;
+import com.cg.springbootrest.ImportedOrder.exception.OrderException;
+
+public interface OrderService 
+{
+	public List<Order> createOrder(Order order) throws OrderException;
+	public List<Order> updateOrder(long id,Order order) throws OrderException;
+	public List<Order> viewAllOrder() throws OrderException;
+	public List<Order> findByQuantity(int quantity, int quantity1) throws OrderException;
+	public List<Order> getAllOrderByQty() throws OrderException;
 	
 }
 
 
 
-service
+seviceclass
 
-package com.cg.productmgmt.service;
 
-import java.util.HashMap;
-import java.util.Map;
+package com.cg.springbootrest.ImportedOrder.service;
 
-import com.cg.productmgmt.dao.ProductDAO;
-import com.cg.productmgmt.exception.ProductException;
+import java.util.List;
 
-public class ProductService implements IProductService
+import com.cg.springbootrest.ImportedOrder.bean.Order;
+import com.cg.springbootrest.ImportedOrder.exception.OrderException;
+
+public class OrderServiceImpl implements OrderService
 {
-	ProductDAO d;
-	
-	public ProductService()
-	{
-		d = new ProductDAO();
-	}
 
 	@Override
-	public int updateProducts(String Category, int hike) throws ProductException {
-		// TODO Auto-generated method stub
-		d.updateProducts(Category, hike);
-		return 0;
-	}
-
-	@Override
-	public Map<String, Integer> getProductDetails() {
+	public List<Order> createOrder(Order order) throws OrderException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public boolean isCategoryValid(String category) {
+	@Override
+	public List<Order> updateOrder(long id, Order order) throws OrderException {
 		// TODO Auto-generated method stub
-		
-		return false;
+		return null;
 	}
 
-	public boolean ishHikeValid(int hike) {
+	@Override
+	public List<Order> viewAllOrder() throws OrderException {
 		// TODO Auto-generated method stub
-		boolean b =false;
-		if(hike>0)
-		{
-			b = true;
-			return b;
-		}
-		return false;
+		return null;
+	}
+
+	@Override
+	public List<Order> findByQuantity(int quantity, int quantity1) throws OrderException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Order> getAllOrderByQty() throws OrderException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
-
 }
-
-
-dao
-
-
-package com.cg.productmgmt.dao;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import com.cg.productmgmt.exception.ProductException;
-
-
-public class ProductDAO implements IProductDAO
-{
- 
-	
-	//map for ProductName as key and Category as value
-	
-		private static Map<String,String> productDetails;	
-		
-		public void productDetails()
-		{
-        productDetails.put("lux","soap");
-
-       productDetails.put("colgate","paste");
-
-      productDetails.put("pears","soap");
-
-      productDetails.put("sony","electronics");
-
-     productDetails.put("samsung","electronics");
-
-    productDetails.put("facepack", "cosmatics");
-
-    productDetails.put("facecream", "cosmatics");
-		}
-
-
-    
-		
-		//map for Product name as key  and price as value value
-		
-		private static Map<String,Integer> salesDetails;	
-		
-		public void salesDetails()
-		{
-		
-		salesDetails= new HashMap<>();
-
-	    salesDetails.put("lux", 100);
-
-	    salesDetails.put("colgate", 50);
-
-	    salesDetails.put("pears", 70);
-
-	    salesDetails.put("sony", 10000);
-
-	    salesDetails.put("samsung", 23000);
-
-	    salesDetails.put("facepack", 100);
-
-	    salesDetails.put("facecream", 60); 
-		}
-
-		
-		//Getter and Setter
-		
-		public static Map<String, Integer> getSalesDetails() {
-			return salesDetails;
-		}
-
-		public static void setSalesDetails(Map<String, Integer> salesDetails) {
-			ProductDAO.salesDetails = salesDetails;
-		}
-
-		public static void setProductDetails(Map<String, String> productDetails) {
-			ProductDAO.productDetails = productDetails;
-		}
-
-		HashMap<String,Integer> hm = new HashMap<String,Integer>();
-		@Override
-		public int updateProducts(String Category, int hike) throws ProductException 
-		{
-			hm.put(salesDetails,productDetails);
-			return 0;
-		}
-
-		@Override
-		public Map<String, Integer> getProductDetails() {
-			// TODO Auto-generated method stub
-			return null;
-		}
-		
-		//implement methods in the interface
-}
-
-
